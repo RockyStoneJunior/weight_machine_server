@@ -18,6 +18,7 @@
 #define RESPONSE_TIMESTAMP "Headt2@%d\n"
 
 void *connection_process_thread(void *);
+unsigned char calcFCS(unsigned char *pMsg, unsigned char len);
 
 int main(int argc, char **argv)
 {
@@ -63,11 +64,40 @@ void *connection_process_thread(void *clientfd_param)
 			send_len = sprintf(sendbuff, RESPONSE_TIMESTAMP, (int)time(NULL));
 			write(clientfd, sendbuff, send_len);
 		}else{
-			write(clientfd, "Unknown Command\n", 16);
+			printf("the data reveived is: ");	
+			
+			for(int i = 0; i < 11; i++)
+			{
+				printf("0x%x ", recvbuff[i]);
+			}
+
+			printf("\n");
+
+			unsigned char checksum = calcFCS(recvbuff, 10);
+		
+			if((recvbuff[0] == 0x5A) && (recvbuff[1] == 0x0B) && (recvbuff[10] == checksum))
+			{
+				printf("receive 0x5A 0x0B, the recvbuff[10] is %x, checksum is %x\n", recvbuff[10], checksum);
+			}else{
+				write(clientfd, "Unknown Command\n", 16);
+				break;
+			}
 		}
 	}
 
 	close(clientfd);
 
 	return NULL;
+}
+
+unsigned char calcFCS(unsigned char *pMsg, unsigned char len)
+{
+	unsigned char result = 0;
+
+	while(len--)
+	{
+		result ^= *pMsg++;
+	}
+
+	return result;
 }
