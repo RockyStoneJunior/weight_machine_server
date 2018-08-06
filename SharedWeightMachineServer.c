@@ -74,6 +74,7 @@ void *connection_process_thread(void *clientfd_param)
 			printf("\n");
 
 			unsigned char checksum = calcFCS(recvbuff, 10);
+			printf("the checksum is %x\n", checksum);
 		
 			if((recvbuff[0] == 0x5A) && (recvbuff[1] == 0x0B) && (recvbuff[10] == checksum))
 			{
