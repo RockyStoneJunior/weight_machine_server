@@ -12,7 +12,8 @@
 #include <sys/types.h>
 #include <sys/syscall.h>
 
-#define RECVBUFF_MAX_SIZE 1024
+#define RECVBUFF_MAX_SIZE 32
+#define SENDBUFF_MAX_SIZE 128
 #define PORT 9999
 
 #define RESPONSE_TIMESTAMP "Heart@%d\n"
@@ -53,7 +54,7 @@ void *connection_process_thread(void *clientfd_param)
 	int clientfd = *(int *)clientfd_param;
 
 	char recvbuff[RECVBUFF_MAX_SIZE];
-	char sendbuff[128];	
+	char sendbuff[SENDBUFF_MAX_SIZE];	
 
 	int recv_len;
 	int send_len;
@@ -87,6 +88,8 @@ void *connection_process_thread(void *clientfd_param)
 				printf("%s---TID:%d Unknown Command---\n", c_time_string, tid);
 			}
 		}
+
+		memset(recvbuff, 0, RECVBUFF_MAX_SIZE);
 	}
 
 	close(clientfd);
