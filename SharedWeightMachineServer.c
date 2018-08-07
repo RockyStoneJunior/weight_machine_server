@@ -16,7 +16,7 @@
 #define SENDBUFF_MAX_SIZE 128
 #define PORT 9999
 
-#define RESPONSE_TIMESTAMP "Heart@%d\n"
+#define RESPONSE_TIMESTAMP "Heart@%lu\n"
 
 #define WX_PLATFORM_LINK "Transmission Links@http://weixin.qq.com/q/02ta7UkQ4de921tsBFNr1g\n"
 
